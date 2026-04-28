@@ -1,17 +1,24 @@
 class Solution {
 public:
     int minOperations(vector<vector<int>>& grid, int x) {
-        const int m = grid.size(), n = grid[0].size(), N = m * n;
-        int freq[10001] = {0}, xMin = INT_MAX, xMax = 0;
+        vector<int> nums;
+        int res = 0;
 
-        int r = grid[0][0] % x;
-        for (const auto& row : grid) {
-            for (int num : row) {
-                auto [q, rr] = div(num, x);
-                if (rr != r)
-                    return -1; 
-                freq[q]++;  
-                xMax=max(xMax, q);
-                xMin=min(xMin, q);
+        for (int i = 0; i < grid.size(); i++) {
+            for (int j = 0; j < grid[0].size(); j++) {
+                nums.push_back(grid[i][j]);
+            }
+        }
+
+        int len = nums.size();
+        nth_element(nums.begin(), nums.begin() + len / 2, nums.end());
+        int target = nums[len / 2];
+
+        for (int n : nums) {
+            if (n % x != target % x) return -1;
+            res += abs(target - n) / x;
+        }
+
+        return res;
     }
 };
